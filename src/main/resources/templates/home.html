@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC Assignmnet</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Movies</h1>
+        <ul class="grid grid-cols-2 gap-4 p-4">
+            <li th:each="movie : ${movies}" class="bg-gray-200 p-4 rounded">
+                <h2 class="text-lg font-bold mb-2 text-center" th:text="${movie.title}"></h2>
+                <div class="flex flex-row justify-between ">
+                    <div class="flex flex-row gap-4">
+                        <span>Year</span>
+                        <span th:text="${movie.year}" />
+                    </div>
+                    <div class="flex flex-row gap-4">
+                        <span>Rating</span>
+                        <span th:text="${movie.rating}" />
+                    </div>
+                </div>
+                <div>
+                    <span>Directed By</span>
+                    <span class="font-semibold" th:text="${movie.director}" />
+                </div>
+                <div class="flex flex-row justify-between ">
+                    <div>
+                        <span>Genre</span>
+                        <span class="font-semibold" th:text="${movie.genre}"></span>
+                    </div>
+                    <div>
+                        <a class="cursor-pointer underline text-blue-400" th:href="@{'/movie?id='+${movie.id}}">Reviews</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script>
+    </script>
+</body>
+
+</html>

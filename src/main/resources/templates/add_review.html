@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC Assignment</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1 class="text-center text-xl font-semibold ">Add Review</h1>
+    <div class="flex flex-col w-full justify-center items-center p-28">
+        <form id="reviewForm" class="flex flex-col gap-4  border bg-gray-100 p-4 rounded">
+            <textarea name="content" id="review" placeholder="Content" required
+                class="p-3 rounded border"></textarea><br>
+            <select name="movieId" required class="p-3 rounded border">
+                <option value="">Select a movie</option>
+                <th:block th:each="movie : ${movies}">
+                    <option th:value="${movie.id}" th:text="${movie.title}" class="p-3"></option>
+                </th:block>
+            </select><br>
+            <input id="rating" type="number" name="rating" placeholder="Rating" min="1" max="5" required
+                class="p-3 rounded border"><br>
+            <input type="submit" value="Submit Review" class="rounded p-2 bg-green-300">
+        </form>
+        <div id="message">
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#reviewForm').submit(function (event) {
+                event.preventDefault();
+                var review = $("#review").val();
+                var rating = $("#rating").val();
+                var movieId = $("select[name='movieId']").val();
+                var accountId = window.location.search.split("=")[1];
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/add_review',
+                    data: JSON.stringify({ review: review, rating: rating, movie: { id: movieId }, account: { id: accountId } }),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        $('#message').text(response).addClass("text-green-500");
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

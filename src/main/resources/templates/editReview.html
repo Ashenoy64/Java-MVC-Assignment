@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Review</title>
+</head>
+<body>
+
+<h1>Edit Review</h1>
+
+<form action="/reviews/edit/{id}" method="post" th:object="${review}">
+    <input type="hidden" id="id" th:field="*{id}">
+    
+    <label for="content">Content:</label>
+    <textarea id="content" th:field="*{content}" required></textarea>
+    <br>
+    <input type="submit" value="Update Review">
+</form>
+
+<a href="/reviews">Back to Reviews</a>
+
+</body>
+</html>

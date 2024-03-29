@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Rating</title>
+</head>
+<body>
+
+<h1>Edit Rating</h1>
+
+<form action="/ratings/edit/{id}" method="post" th:object="${rating}">
+    <input type="hidden" id="id" th:field="*{id}">
+    
+    <label for="value">Value:</label>
+    <input type="number" id="value" th:field="*{value}" required>
+    <br>
+    <input type="submit" value="Update Rating">
+</form>
+
+<a href="/ratings">Back to Ratings</a>
+
+</body>
+</html>

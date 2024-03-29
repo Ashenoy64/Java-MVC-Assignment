@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC Assignmnet</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="flex flex-col justify-center items-center">
+        <h1 class="text-2xl font-bold mb-4">Add Movie</h1>
+        <form id="addMovieForm" class="w-full max-w-lg">
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="title">
+                        Title
+                    </label>
+                    <input id="title" name="title" type="text" placeholder="Enter movie title"
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="genre">
+                        Genre
+                    </label>
+                    <input id="genre" name="genre" type="text" placeholder="Enter movie genre"
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="year">
+                        Year
+                    </label>
+                    <input id="year" name="year" type="number" placeholder="Enter movie year"
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="year">
+                        Director
+                    </label>
+                    <input id="director" name="director" type="text" placeholder="Enter Director name"
+                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <button id="addMovieBtn" type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Add Movie
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div id="message" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#addMovieForm').submit(function (event) {
+                event.preventDefault();
+                var title = $('#title').val();
+                var genre = $('#genre').val();
+                var year = $('#year').val();
+                var director = $('#director').val();
+
+                $.ajax({
+                    url: '/api/add_movies',
+                    type: 'POST',
+                    data: JSON.stringify({ title: title, genre: genre, year: year,director:director }),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        console.log(data)
+                        $('#message').text('Movie added successfully');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error)
+                        $('#message').text('Error adding movie: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

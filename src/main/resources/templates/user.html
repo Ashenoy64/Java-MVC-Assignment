@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC Assignmnet</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="p-2 border-b-2 ">
+        Welcome <span th:text="${user.username}" class="font-bold">
+    </div>
+    <div class="z-10 bg-blue-300 p-4 text-xl my-2 " id="message">
+    </div>
+    <div class=" z-10 absolute w-screen h-screen  hidden backdrop-md mx-auto bg-gray-100" id="modal">
+        <div class="flex flex-row justify-between w-full p-12 ">
+            <h1 class="text-2xl font-bold mb-4 text-2xl">Edit Review</h1>
+            <button onclick="$('#modal').hide()" class="p-2 bg-red-300 rounded w-16">Close</button>
+        </div>
+        <div class="lg:w-1/4 md:w-1/2  w-1/2 mx-auto p-12">
+            <h1 id="movieName" class="font-semibold text-center"></h1>
+            <form id="editForm" class="flex flex-col gap-4" action="/api/add_review" method="POST">
+                <label for="reviewText" class="font-semibold">Review</label>
+                <input type="text" id="editReviewText" name="reviewText" class="p-3 rounded border">
+                <label for="reviewText" class="font-semibold">Rating</label>
+                <input type="number" id="editReviewRating" name="reviewRating" class="p-3 rounded border">
+                <button type="button" onclick="submitUpdate()" class="p-2 bg-green-300">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Reviews</h1>
+        <div id="reviews px-20">
+            <div th:each=" review:${reviews}" class="lg:w-1/2 mx-auto">
+                <div class="border border-gray-300 rounded p-4 mb-4">
+                    <div class="flex flex-row justify-between">
+                        <h2 class="text-lg font-bold" th:text="${review.movie.title}"></h2>
+                        <span th:text="${review.rating}">
+                    </div>
+                    <p th:text="${review.review}"></p>
+                    <div class="mt-2">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2"
+                            th:onclick="'editReview('+${review.id}+')'">Edit</button>
+                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4"
+                            th:onclick="'deleteReview('+${review.id}+')'">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        onload = function () {
+            $('#modal').hide();
+        }
+        function deleteReview(reviewId) {
+            $.ajax({
+                url: "/api/delete_reviews?review=" + reviewId,
+                method: "GET",
+                success: function (response) {
+                    $("#message").show()
+                    $('#message').text(response);
+                    messageHide();
+                   
+                },
+                error: function (error) {
+                    $("#message").show()
+                    $('#message').text(error);
+                    messageHide();
+                }
+            });
+        }
+
+
+
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const reviews = [[${ reviews }]];
+        /*]]>*/
+
+        let __reviewId = null;
+        function editReview(reviewId) {
+            var review = reviews.find(r => r.id === reviewId); // Find the review with the given id
+            if (review) {
+                __reviewId = reviewId;
+                $('#editReviewText').val(review.review);
+                $('#editReviewRating').val(review.rating);
+                $('#movieName').text(review.movie.title);
+                $('#modal').show();
+            }
+
+        }
+
+        function messageHide() {
+            
+            setTimeout(() => {
+                $('#message').hide();
+                window.location.reload();
+            }, 3000)
+        }
+
+        function submitUpdate() {
+            var review = reviews.find(r => r.id === __reviewId);
+            if (review) {
+                var reviewText = $('#editReviewText').val();
+                var reviewRating = $('#editReviewRating').val();
+                const data = {...review, review: reviewText, rating: reviewRating };
+                console.log(data)
+                $.ajax({
+                    url: "/api/update_review",
+                    method: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(
+                        data),
+                    success: function (response) {
+                        $("#message").show()
+                        $('#message').text(response);
+                        $('#modal').hide();
+                        messageHide();
+                        
+                    },
+                    error: function (error) {
+                        $("#message").show()
+                        $('#message').text(error);
+                        $('#modal').hide();
+                        messageHide();
+                    }
+                });
+            }
+
+        }
+        onload = function () {
+            $('#modal').hide();
+            $('#message').hide();
+            }
+
+    </script>
+
+
+</body>
+
+</html>

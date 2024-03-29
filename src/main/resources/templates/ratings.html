@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ratings</title>
+</head>
+<body>
+
+<h1>Rating Management</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Value</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="rating : ${ratings}">
+        <td th:text="${rating.id}"></td>
+        <td th:text="${rating.value}"></td>
+        <td>
+            <a th:href="@{'/ratings/edit/' + ${rating.id}}">Edit</a> |
+            <a th:href="@{'/ratings/delete/' + ${rating.id}}" onclick="return confirm('Are you sure you want to delete this rating?')">Delete</a>
+        </td>
+    </tr>
+</table>
+
+<h2>Add Rating</h2>
+
+<form action="/ratings" method="post" th:object="${rating}">
+    <label for="value">Value:</label>
+    <input type="number" id="value" th:field="*{value}" required>
+    <br>
+    <input type="submit" value="Add Rating">
+</form>
+
+</body>
+</html>
